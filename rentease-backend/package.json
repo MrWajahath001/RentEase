@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "cd ../frontend && npm install --legacy-peer-deps && npm run build && cp -r dist ../rentease-backend/public"
+    "build": "cd ../frontend && npm install --legacy-peer-deps --include=dev && npm run build && cp -r dist ../rentease-backend/public"
   },
   "keywords": [],
   "author": "",
