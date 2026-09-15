@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Search() {
@@ -14,7 +15,7 @@ export default function Search() {
         if (!query.trim()) return; // prevent empty search
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/property/search?query=${encodeURIComponent(query)}`);
+            const res = await fetch(`${API_BASE}/api/property/search?query=${encodeURIComponent(query)}`);
             const data = await res.json();
             if (data && data.success && Array.isArray(data.properties)) {
                 setProperties(data.properties);
@@ -67,7 +68,9 @@ export default function Search() {
                                     <img
                                         src={
                                             p.photos && p.photos.length > 0
-                                                ? `http://localhost:5000/${String(p.photos[0]).replaceAll("\\\\", "/")}`
+                                                ? (String(p.photos[0]).startsWith("http")
+                                                    ? String(p.photos[0])
+                                                    : `${API_BASE}/${String(p.photos[0]).replaceAll("\\\\", "/")}`)
                                                 : "https://via.placeholder.com/400x250?text=No+Image"
                                         }
                                         className="card-img-top"

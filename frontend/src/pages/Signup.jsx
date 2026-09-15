@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../config";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export default function SignupPage() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", formData);
+      const res = await axios.post(`${API_BASE}/api/auth/signup`, formData);
       setMessage(res.data.message);
       setLoading(false);
       setFormData({

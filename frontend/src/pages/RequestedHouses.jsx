@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../config";
 
 export default function RequestedHouses() {
   const [applications, setApplications] = useState([]);
@@ -16,7 +17,7 @@ export default function RequestedHouses() {
 
   const fetchApps = async (uid) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/rent/my/${uid}`);
+      const res = await fetch(`${API_BASE}/api/rent/my/${uid}`);
       const data = await res.json();
       if (data.success) setApplications(data.applications || []);
     } finally {
@@ -40,7 +41,7 @@ export default function RequestedHouses() {
   const revoke = async (id) => {
     if (!window.confirm("Revoke this request?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/rent/${id}`, {
+      const res = await fetch(`${API_BASE}/api/rent/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tenantId: user._id }),

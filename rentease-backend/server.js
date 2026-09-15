@@ -28,10 +28,17 @@ app.use("/api/user", require("./routes/user"));
 app.use("/api/rent", rentRoutes);
 
 
-// ===== Base Route =====
-app.get("/", (req, res) => {
-  res.send("✅ RentEase backend is running successfully!");
-});
+// ===== Serve Frontend in Production =====
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "public")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("✅ RentEase backend is running successfully!");
+  });
+}
 
 // ===== MongoDB Connection =====
 const connectDB = async () => {

@@ -1,6 +1,7 @@
 // src/pages/ListedProperty.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { API_BASE } from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -35,14 +36,14 @@ export default function ListedProperty() {
 
   const fetchUserProperties = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/property/user/${userId}`);
+      const res = await fetch(`${API_BASE}/api/property/user/${userId}`);
       const data = await res.json();
 
       if (data.success && Array.isArray(data.properties) && data.properties.length > 0) {
         setProperties(data.properties || []);
       } else {
         // Fallback: fetch all and filter client-side (covers legacy items without proper query)
-        const resAll = await fetch("http://localhost:5000/api/property");
+        const resAll = await fetch(`${API_BASE}/api/property`);
         const dataAll = await resAll.json();
         if (dataAll.success && Array.isArray(dataAll.properties)) {
           const mine = dataAll.properties.filter((p) => {
@@ -66,7 +67,7 @@ export default function ListedProperty() {
     setShowAppsFor(propertyId);
     setAppsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/rent/property/${propertyId}`);
+      const res = await fetch(`${API_BASE}/api/rent/property/${propertyId}`);
       const data = await res.json();
       if (data.success) setApplications(data.applications || []);
       else alert(data.message || "Failed to load applications");
@@ -82,7 +83,7 @@ export default function ListedProperty() {
     if (showAppsFor) {
       const poll = async () => {
         try {
-          const res = await fetch(`http://localhost:5000/api/rent/property/${showAppsFor}`);
+          const res = await fetch(`${API_BASE}/api/rent/property/${showAppsFor}`);
           const data = await res.json();
           if (data.success) setApplications(data.applications || []);
         } catch {
@@ -106,7 +107,7 @@ export default function ListedProperty() {
       payload.scheduledAt = scheduledAt;
     }
     try {
-      const res = await fetch(`http://localhost:5000/api/rent/${appId}/${action}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const res = await fetch(`${API_BASE}/api/rent/${appId}/${action}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = await res.json();
       if (data.success) {
         setApplications(prev => prev.map(a => (a._id === appId ? data.application : a)));
@@ -123,7 +124,7 @@ export default function ListedProperty() {
     if (!window.confirm("Are you sure you want to delete this property?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/property/${propertyId}`, {
+      const res = await fetch(`${API_BASE}/api/property/${propertyId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user._id }),
@@ -239,7 +240,7 @@ export default function ListedProperty() {
                     src={property.photos?.[0]
                       ? (String(property.photos[0]).startsWith("http")
                         ? String(property.photos[0])
-                        : `http://localhost:5000/${property.photos[0].replaceAll("\\", "/")}`)
+                        : `${API_BASE}/${property.photos[0].replaceAll("\\", "/")}`)
                       : "https://via.placeholder.com/400x250?text=No+Image"}
                     className="card-img-top"
                     alt={property.title || "Property Image"}

@@ -1,6 +1,7 @@
 // src/pages/ListingProperty.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { API_BASE } from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -107,7 +108,7 @@ export default function ListingProperty() {
 
       uploadedPhotos.forEach(photo => data.append("photos", photo));
 
-      const res = await fetch("http://localhost:5000/api/property", {
+      const res = await fetch(`${API_BASE}/api/property`, {
         method: "POST",
         body: data,
       });

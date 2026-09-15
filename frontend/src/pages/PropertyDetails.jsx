@@ -1,6 +1,7 @@
 // src/pages/PropertyDetails.jsx
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { API_BASE } from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Toast } from "bootstrap"; // ✅ Import Bootstrap Toast JS
@@ -31,7 +32,7 @@ export default function PropertyDetails() {
     if (stored) setCurrentUser(JSON.parse(stored));
     const fetchProperty = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/property/${id}`);
+        const res = await fetch(`${API_BASE}/api/property/${id}`);
         const data = await res.json();
         if (data.success) setProperty(data.property);
         else setError("Property not found");
@@ -48,7 +49,7 @@ export default function PropertyDetails() {
     const fetchMyApp = async () => {
       if (!currentUser || !property?._id) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/rent/my/${currentUser._id}`);
+        const res = await fetch(`${API_BASE}/api/rent/my/${currentUser._id}`);
         const data = await res.json();
         if (data.success) {
           const found = (data.applications || []).find(a => String(a.propertyId?._id || a.propertyId) === String(property._id));
@@ -73,7 +74,7 @@ export default function PropertyDetails() {
     if (applyBusy || applySent) return;
     try {
       setApplyBusy(true);
-      const res = await fetch("http://localhost:5000/api/rent/apply", {
+      const res = await fetch(`${API_BASE}/api/rent/apply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +105,7 @@ export default function PropertyDetails() {
     if (!userApp) return;
     if (!window.confirm("Revoke this request?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/rent/${userApp._id}`, {
+      const res = await fetch(`${API_BASE}/api/rent/${userApp._id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tenantId: currentUser._id }),
@@ -187,7 +188,7 @@ export default function PropertyDetails() {
                         key={i}
                       >
                       <img
-                        src={String(photo).startsWith("http") ? String(photo) : `http://localhost:5000/${String(photo).replaceAll("\\\\", "/")}`}
+                        src={String(photo).startsWith("http") ? String(photo) : `${API_BASE}/${String(photo).replaceAll("\\\\", "/")}`}
                           className="d-block w-100"
                           alt={property.title}
                           style={{

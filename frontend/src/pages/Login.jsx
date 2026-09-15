@@ -3,6 +3,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config";
 
 export default function ProfessionalLoginPage() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function ProfessionalLoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      const res = await axios.post(`${API_BASE}/api/auth/login`, { email, password });
 
       // Store token and user info
       localStorage.setItem("token", res.data.token);

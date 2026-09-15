@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { API_BASE } from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -14,7 +15,7 @@ export default function PropertyDetail() {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/property/${id}`);
+        const res = await fetch(`${API_BASE}/api/property/${id}`);
         const data = await res.json();
         if (data.success) setProperty(data.property);
         else setError(data.message || "Failed to load property");
@@ -87,7 +88,7 @@ export default function PropertyDetail() {
                   {(property.photos?.length ? property.photos : ["uploads/default.jpg"]).map((p, i) => (
                     <div key={i} className={`carousel-item ${i === 0 ? "active" : ""}`}>
                       <img
-                        src={`http://localhost:5000/${String(p).replaceAll("\\\\", "/")}`}
+                        src={String(p).startsWith("http") ? String(p) : `${API_BASE}/${String(p).replaceAll("\\\\", "/")}`}
                         className="d-block w-100"
                         style={{ height: "420px", objectFit: "cover" }}
                         alt={`Photo ${i + 1}`}

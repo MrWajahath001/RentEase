@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { API_BASE } from "../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -24,7 +25,7 @@ export default function Home() {
 
   const fetchAllProperties = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/property");
+      const res = await fetch(`${API_BASE}/api/property`);
       const data = await res.json();
       if (data && data.success && Array.isArray(data.properties)) {
         const stored = localStorage.getItem("user");
@@ -61,7 +62,7 @@ export default function Home() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/property/search?query=${encodeURIComponent(query)}`
+        `${API_BASE}/api/property/search?query=${encodeURIComponent(query)}`
       );
       const data = await res.json();
       if (data && data.success && Array.isArray(data.properties)) {
@@ -226,7 +227,7 @@ export default function Home() {
                   p.photos && p.photos.length > 0
                     ? (String(p.photos[0]).startsWith("http")
                         ? String(p.photos[0])
-                        : `http://localhost:5000/${String(p.photos[0]).replaceAll("\\\\", "/")}`)
+                        : `${API_BASE}/${String(p.photos[0]).replaceAll("\\\\", "/")}`)
                     : "https://via.placeholder.com/1200x500?text=No+Image"
                 }
                 className="d-block w-100"
@@ -288,7 +289,7 @@ export default function Home() {
                       p.photos && p.photos.length > 0
                         ? (String(p.photos[0]).startsWith("http")
                             ? String(p.photos[0])
-                            : `http://localhost:5000/${String(p.photos[0]).replaceAll("\\\\", "/")}`)
+                            : `${API_BASE}/${String(p.photos[0]).replaceAll("\\\\", "/")}`)
                         : "https://via.placeholder.com/400x250?text=No+Image"
                     }
                     className="card-img-top"
